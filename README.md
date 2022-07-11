@@ -3,7 +3,7 @@ ip lookup cli with nordvpn API
 
 # Installation
 ```console
-go install github.com/gofika/iplookup
+go install github.com/gofika/iplookup@latest
 ```
 
 # Usage
