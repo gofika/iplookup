@@ -74,15 +74,38 @@ func resolveToIP(input string) (string, error) {
 }
 
 func main() {
-	flag.Parse()
-	args := flag.Args()
-
-	if len(args) != 1 {
+	// Custom parsing to handle "iplookup <ip> -n" format
+	var input string
+	noPrettyValue := false
+	
+	// Check if we have at least one argument
+	if len(os.Args) < 2 {
 		usage()
 		return
 	}
-
-	input := args[0]
+	
+	// Parse arguments manually to support flexible order
+	nonFlagArgs := []string{}
+	for i := 1; i < len(os.Args); i++ {
+		if os.Args[i] == "-n" {
+			noPrettyValue = true
+		} else if !strings.HasPrefix(os.Args[i], "-") {
+			nonFlagArgs = append(nonFlagArgs, os.Args[i])
+		} else {
+			// Unknown flag
+			usage()
+			return
+		}
+	}
+	
+	// We should have exactly one non-flag argument (the IP/domain)
+	if len(nonFlagArgs) != 1 {
+		usage()
+		return
+	}
+	
+	input = nonFlagArgs[0]
+	*noPretty = noPrettyValue
 
 	// Resolve input to IP address
 	ip, err := resolveToIP(input)
