@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://github.com/gofika/iplookup/releases"><img src="https://img.shields.io/github/release/gofika/iplookup.svg?style=flat-square" alt="Release"></a>
   <a href="https://github.com/gofika/iplookup/blob/main/LICENSE"><img src="https://img.shields.io/github/license/gofika/iplookup?style=flat-square" alt="License"></a>
-  <a href="https://github.com/gofika/iplookup/actions"><img src="https://img.shields.io/github/actions/workflow/status/gofika/iplookup/release.yml?branch=main&style=flat-square" alt="Build Status"></a>
+  <a href="https://github.com/gofika/iplookup/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/gofika/iplookup/ci.yml?branch=main&style=flat-square" alt="CI"></a>
   <a href="https://goreportcard.com/report/github.com/gofika/iplookup"><img src="https://goreportcard.com/badge/github.com/gofika/iplookup?style=flat-square" alt="Go Report Card"></a>
 </p>
 
@@ -16,6 +16,7 @@
 - 🚀 **Fast Response** - Uses high-performance ipinfo.io API with average response time < 200ms
 - 🌍 **Detailed Information** - Get complete geolocation, ISP, timezone and more
 - 🎯 **Accurate Detection** - Supports Anycast IP detection (e.g., 8.8.8.8)
+- 🌐 **Domain Support** - Automatically resolves domain names to IP addresses
 - 💻 **Cross-Platform** - Supports Windows, macOS, Linux
 - 🔧 **Zero Configuration** - No API key required, works out of the box
 - 📦 **Lightweight** - Single executable file with no dependencies
@@ -67,6 +68,12 @@ Query IP address information:
 
 ```bash
 iplookup 8.8.8.8
+```
+
+Query domain name (automatically resolved to IP):
+
+```bash
+iplookup google.com
 ```
 
 Sample output:
