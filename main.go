@@ -114,10 +114,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// If input was a domain, show what IP we resolved it to
-	if input != ip && !*noPretty {
-		fmt.Printf("Resolved %s to %s\n\n", input, ip)
-	}
+	// Remove the "Resolved" message to ensure pure JSON output
 
 	// Query ipinfo.io
 	uri := &url.URL{Scheme: "https", Host: "ipinfo.io", Path: fmt.Sprintf("/%s/json", ip)}
@@ -136,18 +133,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *noPretty {
-		fmt.Println(body.String())
-		return
-	}
-
-	// Format JSON output
-	var prettyJSON bytes.Buffer
-	err = json.Indent(&prettyJSON, body.Bytes(), "", "\t")
+	// Parse JSON to remove readme field
+	var data map[string]interface{}
+	err = json.Unmarshal(body.Bytes(), &data)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error parsing JSON: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Printf(prettyJSON.String())
-	fmt.Println()
+	
+	// Remove readme field
+	delete(data, "readme")
+	
+	// Re-encode JSON
+	var output []byte
+	if *noPretty {
+		output, err = json.Marshal(data)
+	} else {
+		output, err = json.MarshalIndent(data, "", "\t")
+	}
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error encoding JSON: %v\n", err)
+		os.Exit(1)
+	}
+	
+	fmt.Println(string(output))
 }
