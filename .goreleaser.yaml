@@ -108,6 +108,21 @@ release:
     
     **Full Changelog**: https://github.com/gofika/iplookup/compare/{{ .PreviousTag }}...{{ .Tag }}
 
+brews:
+  - repository:
+      owner: gofika
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    name: iplookup
+    homepage: "https://github.com/gofika/iplookup"
+    description: "Fast and simple command-line IP address lookup tool"
+    license: "MIT"
+    test: |
+      system "#{bin}/iplookup", "-h"
+    install: |
+      bin.install "iplookup"
+
 nfpms:
   - id: packages
     package_name: iplookup
