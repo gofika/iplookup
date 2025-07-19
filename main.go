@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,24 +17,28 @@ func usage() {
 	main := filepath.Base(os.Args[0])
 	filesuffix := filepath.Ext(main)
 	main = main[0 : len(main)-len(filesuffix)]
-	fmt.Printf("usage: %s <ip>\nexample: iplookup 8.8.8.8\n", main)
+	fmt.Fprintf(os.Stderr, "usage: %s <ip> [-no-pretty]\n", main)
+	flag.PrintDefaults()
+	fmt.Fprintf(os.Stderr, "\nexample: iplookup 8.8.8.8 -no-pretty\n")
 }
 
+var noPretty = flag.Bool("n", false, "no pretty json output")
+
 func main() {
-	if len(os.Args) != 2 {
+	flag.Parse()
+	args := flag.Args()
+
+	if len(args) != 1 {
 		usage()
 		return
 	}
 	rx := regexp.MustCompile(`\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b`)
-	if !rx.MatchString(os.Args[1]) {
+	if !rx.MatchString(args[0]) {
 		usage()
 		return
 	}
-	ip := os.Args[1]
-	q := make(url.Values)
-	q.Add("action", "get_user_info_data")
-	q.Add("ip", ip)
-	uri := &url.URL{Scheme: "https", Host: "nordvpn.com", Path: "/wp-admin/admin-ajax.php", RawQuery: q.Encode()}
+	ip := args[0]
+	uri := &url.URL{Scheme: "https", Host: "ipinfo.io", Path: fmt.Sprintf("/%s/json", ip)}
 	req := &http.Request{Method: http.MethodGet, URL: uri}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -46,5 +52,16 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%s", body.String())
+	if *noPretty {
+		fmt.Println(body.String())
+		return
+	}
+	// Format JSON output
+	var prettyJSON bytes.Buffer
+	err = json.Indent(&prettyJSON, body.Bytes(), "", "\t")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf(prettyJSON.String())
 }
