@@ -138,10 +138,8 @@ dockers:
       - "ghcr.io/gofika/iplookup:v{{ .Major }}"
       - "ghcr.io/gofika/iplookup:v{{ .Major }}.{{ .Minor }}"
       - "ghcr.io/gofika/iplookup:latest"
-    dockerfile: |
-      FROM scratch
-      COPY iplookup /
-      ENTRYPOINT ["/iplookup"]
     use: buildx
+    goos: linux
+    goarch: amd64
     build_flag_templates:
       - "--platform=linux/amd64,linux/arm64"
