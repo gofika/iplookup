@@ -77,13 +77,13 @@ func main() {
 	// Custom parsing to handle "iplookup <ip> -n" format
 	var input string
 	noPrettyValue := false
-	
+
 	// Check if we have at least one argument
 	if len(os.Args) < 2 {
 		usage()
 		return
 	}
-	
+
 	// Parse arguments manually to support flexible order
 	nonFlagArgs := []string{}
 	for i := 1; i < len(os.Args); i++ {
@@ -97,13 +97,13 @@ func main() {
 			return
 		}
 	}
-	
+
 	// We should have exactly one non-flag argument (the IP/domain)
 	if len(nonFlagArgs) != 1 {
 		usage()
 		return
 	}
-	
+
 	input = nonFlagArgs[0]
 	*noPretty = noPrettyValue
 
@@ -134,20 +134,20 @@ func main() {
 	}
 
 	// Parse JSON to remove readme field
-	var data map[string]interface{}
+	var data map[string]any
 	err = json.Unmarshal(body.Bytes(), &data)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing JSON: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Remove readme field
 	delete(data, "readme")
-	
+
 	// Re-encode JSON
 	var output []byte
 	if *noPretty {
-		output, err = json.Marshal(data)
+		output, err = json.MarshalIndent(data, "", "")
 	} else {
 		output, err = json.MarshalIndent(data, "", "\t")
 	}
@@ -155,6 +155,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error encoding JSON: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	fmt.Println(string(output))
 }

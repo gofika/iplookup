@@ -111,7 +111,7 @@ release:
 homebrew_casks:
   - repository:
       owner: gofika
-      name: homebrew-tap
+      name: homebrew-tapˇ
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     directory: Casks
     name: iplookup
