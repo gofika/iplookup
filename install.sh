@@ -46,9 +46,9 @@ install_iplookup() {
     local version=$(get_latest_version)
     local os=$(get_os)
     local arch=$(get_arch)
-    
+
     echo "Installing iplookup ${version} for ${os}/${arch}..."
-    
+
     # Build download URL
     local filename="iplookup_${version#v}_${os}_${arch}"
     if [ "$os" = "linux" ] || [ "$os" = "freebsd" ] || [ "$os" = "openbsd" ]; then
@@ -56,21 +56,21 @@ install_iplookup() {
     else
         filename="${filename}.tar.gz"
     fi
-    
+
     local download_url="https://github.com/${REPO}/releases/download/${version}/${filename}"
-    
+
     # Create temporary directory
     local tmp_dir=$(mktemp -d)
     trap "rm -rf $tmp_dir" EXIT
-    
+
     # Download file
     echo "Downloading ${download_url}..."
     curl -sL "$download_url" -o "$tmp_dir/$filename"
-    
+
     # Extract file
     echo "Extracting..."
     tar -xzf "$tmp_dir/$filename" -C "$tmp_dir"
-    
+
     # Check if sudo is needed
     if [ -w "$INSTALL_DIR" ]; then
         mv "$tmp_dir/$BINARY_NAME" "$INSTALL_DIR/$BINARY_NAME"
@@ -80,7 +80,7 @@ install_iplookup() {
         sudo mv "$tmp_dir/$BINARY_NAME" "$INSTALL_DIR/$BINARY_NAME"
         sudo chmod +x "$INSTALL_DIR/$BINARY_NAME"
     fi
-    
+
     echo "iplookup has been successfully installed to $INSTALL_DIR/$BINARY_NAME"
     echo ""
     echo "Usage:"
@@ -105,7 +105,7 @@ check_dependencies() {
 main() {
     echo "=== iplookup Installation Script ==="
     echo ""
-    
+
     check_dependencies
     install_iplookup
 }

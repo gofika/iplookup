@@ -101,17 +101,17 @@ release:
   name_template: "{{.ProjectName}} v{{.Version}}"
   header: |
     ## iplookup v{{.Version}}
-    
+
     Fast and simple IP address lookup toolˇ
   footer: |
     ---
-    
+
     **Full Changelog**: https://github.com/gofika/iplookup/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 homebrew_casks:
   - repository:
       owner: gofika
-      name: homebrew-tapˇ
+      name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     directory: Casks
     name: iplookup

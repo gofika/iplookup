@@ -18,7 +18,7 @@ function Get-Architecture {
     switch ($arch) {
         "AMD64" { return "x86_64" }
         "x86" { return "i386" }
-        default { 
+        default {
             Write-Error "Unsupported architecture: $arch"
             exit 1
         }
@@ -28,34 +28,34 @@ function Get-Architecture {
 function Install-IpLookup {
     Write-Host "=== iplookup Windows Installation Script ===" -ForegroundColor Cyan
     Write-Host ""
-    
+
     # Get version and architecture
     $version = Get-LatestVersion
     $arch = Get-Architecture
-    
+
     Write-Host "Installing iplookup $version for windows/$arch..." -ForegroundColor Green
-    
+
     # Build download URL
     $filename = "iplookup_$($version.TrimStart('v'))_windows_$arch.zip"
     $downloadUrl = "https://github.com/$REPO/releases/download/$version/$filename"
-    
+
     # Create installation directory
     if (!(Test-Path $INSTALL_DIR)) {
         New-Item -ItemType Directory -Path $INSTALL_DIR -Force | Out-Null
     }
-    
+
     # Download file
     $tempFile = Join-Path $env:TEMP $filename
     Write-Host "Downloading $downloadUrl..." -ForegroundColor Yellow
     Invoke-WebRequest -Uri $downloadUrl -OutFile $tempFile
-    
+
     # Extract file
     Write-Host "Extracting..." -ForegroundColor Yellow
     Expand-Archive -Path $tempFile -DestinationPath $INSTALL_DIR -Force
-    
+
     # Clean up temporary file
     Remove-Item $tempFile -Force
-    
+
     # Add to PATH
     $currentPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
     if ($currentPath -notlike "*$INSTALL_DIR*") {
@@ -67,7 +67,7 @@ function Install-IpLookup {
         )
         $env:Path = "$env:Path;$INSTALL_DIR"
     }
-    
+
     Write-Host ""
     Write-Host "iplookup has been successfully installed to $INSTALL_DIR\$BINARY_NAME" -ForegroundColor Green
     Write-Host ""
