@@ -147,7 +147,7 @@ func main() {
 	// Re-encode JSON
 	var output []byte
 	if *noPretty {
-		output, err = json.MarshalIndent(data, "", "")
+		output, err = json.Marshal(data)
 	} else {
 		output, err = json.MarshalIndent(data, "", "\t")
 	}
